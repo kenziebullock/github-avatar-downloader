@@ -1,6 +1,9 @@
 const request = require('request');
 const secrets = require('./secrets');
 const fs = require('fs');
+require('dotenv').config();
+const args = process.argv;
+
 let avatarURL = '';
 let avatarPath = '';
 
@@ -8,12 +11,16 @@ console.log('Welcome to the GitHub Avatar Downloader!');
 
 // function to get contributors
 function getRepoContributors(repoOwner, repoName, cb) {
-    
+    // checks if CL inputs are correct
+    if (args.length < 4) {
+        return 'Invalid CL arguments';
+    }
+
     const options = {
         url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
         headers: {
             'User-Agent': 'request',
-            'Authorization': secrets.GITHUB_TOKEN
+            'Authorization': process.env.DB_TOKEN
         }
     };
     // request and parse data
@@ -29,11 +36,9 @@ function getRepoContributors(repoOwner, repoName, cb) {
 }
 
 // call function with nameless callback
-getRepoContributors(process.argv[2], process.argv[3], function(err, result) {
-    //console.log('Errors:', err);
-    if (process.argv.length !== 4) {
-        return;
-    }
+getRepoContributors(args[2], args[3], function(err, result) {
+    // console.log('Errors:', err);
+    
     for (var key in result) {
         avatarPath = `avatars/${result[key].login}.jpg`;
         avatarURL = result[key].avatar_url;
