@@ -28,10 +28,12 @@ function getRepoContributors(repoOwner, repoName, cb) {
     });
 }
 
-// worked on project with alex buck
-
-getRepoContributors('jquery', 'jquery', function(err, result) {
+// call function with nameless callback
+getRepoContributors(process.argv[2], process.argv[3], function(err, result) {
     //console.log('Errors:', err);
+    if (process.argv.length !== 4) {
+        return;
+    }
     for (var key in result) {
         avatarPath = `avatars/${result[key].login}.jpg`;
         avatarURL = result[key].avatar_url;
@@ -40,6 +42,7 @@ getRepoContributors('jquery', 'jquery', function(err, result) {
     return true;
 });
 
+// function to GET image 
 function downloadImageByURL(url, filePath) {
     request.get(url)
            .on('error', function(err) {
@@ -55,4 +58,3 @@ function downloadImageByURL(url, filePath) {
            .pipe(fs.createWriteStream(filePath));
 }
 
-// downloadImageByURL(avatarURLs, avatarPath);
