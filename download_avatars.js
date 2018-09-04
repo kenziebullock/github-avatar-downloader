@@ -4,6 +4,7 @@ const fs = require('fs');
 require('dotenv').config();
 const args = process.argv;
 
+
 let avatarURL = '';
 let avatarPath = '';
 
@@ -13,9 +14,19 @@ console.log('Welcome to the GitHub Avatar Downloader!');
 function getRepoContributors(repoOwner, repoName, cb) {
     // checks if CL inputs are correct
     if (args.length < 4) {
-        return 'Invalid CL arguments';
+        throw 'Invalid CL arguments';
     }
-
+    // checks if download destiantion path exists
+    if (!fs.existsSync('avatars/')) {
+        fs.mkdirSync('avatars/');
+    }
+    // checks if .env file exists
+    if (!fs.existsSync('./.env')) {
+        throw '.env file missing!'
+    }
+    // check if owner/repo exist
+    // 
+        
     const options = {
         url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
         headers: {
